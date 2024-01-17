@@ -5,10 +5,13 @@ const port = 8000;
 const app = express();
 
 // mock data
-const mockUser = [
-  { id: 1, name: "anson", displayName: "Anson" },
-  { id: 2, name: "jack", displayName: "Jack" },
-  { id: 3, name: "adam", displayName: "Adam" },
+const mockUsers = [
+  { id: 1, username: "anson", displayName: "Anson" },
+  { id: 2, username: "jack", displayName: "Jack" },
+  { id: 3, username: "adam", displayName: "Adam" },
+  { id: 4, username: "tima", displayName: "Tina" },
+  { id: 5, username: "jason", displayName: "Jason" },
+  { id: 6, username: "marilyn", displayName: "Marilyn" },
 ];
 
 // routes
@@ -17,7 +20,19 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/users", (req, res) => {
-  res.send(mockUser);
+  console.log(req.query);
+  const {query:{filter, value}} = req;
+
+  // if filter and value are defined
+  if(filter && value){
+    return res.send(
+      mockUsers.filter((user) => {
+        user[filter].includes(value)
+      })
+    )
+  }
+
+  res.send(mockUsers);
 });
 
 app.get("/api/users/:id", (req, res) => {
@@ -32,7 +47,7 @@ app.get("/api/users/:id", (req, res) => {
     });
   }
 
-  const findUser = mockUser.find((user) => {
+  const findUser = mockUsers.find((user) => {
     user.id === parseId;
   });
 
